@@ -30,9 +30,6 @@ class BaseUserTokenAuth:
         return False
 
     def verify_header_token(self, request):
-        # 白名单不经过token验证
-        if request.path in settings.ALLOW_WHITE_URL:
-            return True, None
         # 单次请求的全局变量，装饰器可能提前校验并设置了值，如果不为None说明已校验成功，直接返回
         if hasattr(request, 'user_data'):
             token_data = request.user_data
@@ -40,7 +37,7 @@ class BaseUserTokenAuth:
                 # print(f"request 中包含了user: {token_data}")
                 return True, token_data
 
-        token = request.COOKIES.get('devops_token')
+        token = request.COOKIES.get('user_token')
         if token is None:
             return False, '当前token信息为空.'
         try:

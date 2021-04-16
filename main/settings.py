@@ -56,7 +56,7 @@ MIDDLEWARE = [
     'common.middleware.GlobalExceptionMiddleware'
 ]
 
-ROOT_URLCONF = 'vocabulary.urls'
+ROOT_URLCONF = 'main.urls'
 
 TEMPLATES = [
     {
@@ -133,17 +133,12 @@ ENVIRONMENT = 'dev'
 # 单个资源允许访问的请求方式
 SAFE_METHODS = ['GET', 'HEAD', 'OPTIONS', 'POST', 'DELETE']
 
-# 白名单
-ALLOW_WHITE_URL = ['/ziwei/api/v1/base/user/checklogin',
-                   '/api/v1/base/check/health',
-                   '/ziwei/api/users/UserRefresh']
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
-    'DEFAULT_PERMISSION_CLASSES': ['common.token.user_token_auth.BaseUserTokenAuth'],
+    'DEFAULT_PERMISSION_CLASSES': ['common.token.user_auth.BaseUserTokenAuth'],
     'DEFAULT_PAGINATION_CLASS': 'common.utils.pagination.PageNumberPagination',
     # 配置过滤
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
@@ -162,26 +157,26 @@ REDIS_MAIN = {'host': '127.0.0.1', 'port': 6379, 'decode_responses': True}
 REDIS_CACHE = redis.StrictRedis(**REDIS_MAIN)
 REDIS_TOKEN_EXPIRE = 60
 
-SESSION_COOKIE_NAME = 'vocabulary_token'
+SESSION_COOKIE_NAME = 'user_token'
 
 # git配置
 GITLAB_TOKEN = {'gitlab.vocabulary.com': 'Zyw_sbMZ6n32p2zsQTUq'}
 GIT_CLIENT = '/usr/bin/git'
 
 # 用户头像地址前缀
-BASE_AVATAR_URL = "http://ziwei.vocabulary.com/user/avatar"
+BASE_AVATAR_URL = "http://study.vocabulary.com/user/avatar"
 
 from common.utils.json_log import JSONFormatter
 
-DEVOPS_LOG = logging.getLogger(__name__)
-DEVOPS_LOG.setLevel(logging.INFO)
+STUDY_LOG = logging.getLogger(__name__)
+STUDY_LOG.setLevel(logging.INFO)
 
 # write log to file
-handler = logging.handlers.TimedRotatingFileHandler("/tmp/ziwei_vocabulary.log", when="D", backupCount=5)
+handler = logging.handlers.TimedRotatingFileHandler("/tmp/study_vocabulary.log", when="D", backupCount=5)
 handler.setLevel(logging.INFO)
 handler.setFormatter(JSONFormatter())
 
-DEVOPS_LOG.addHandler(handler)
+STUDY_LOG.addHandler(handler)
 
 # 全局异步任务线程 ---- begin ----
 import asyncio
@@ -202,14 +197,5 @@ t.start()
 
 
 # 有道查询api
-YOUDAO_WORD_API = 'http://fanyi.youdao.com/openapi.do?keyfrom=youdao111&key=60638690&type=data&doctype=json&version=1.1&q='
-# SERVICE_NAME = 'vocabulary'
-# SERVICE_PORT = 8082
-# SERVICE_ID = f"{SERVICE_NAME}_{JSONFormatter.host_ip}_{SERVICE_PORT}"
-# HTTP_CHECK = f"http://{JSONFormatter.host_ip}:{SERVICE_PORT}/api/v1/base/check/health"
-# CONSUL_SERVER = ConsulClient('127.0.0.1', 8500)
-#
-# # CONSUL_SERVER.deregister(service_id=SERVICE_ID)
-# CONSUL_SERVER.register(name=SERVICE_NAME, service_id=SERVICE_ID,
-#                        address=JSONFormatter.host_ip, port=SERVICE_PORT,
-#                        tags=['master'], interval='5s', url=HTTP_CHECK)
+YOUDAO_WORD_API = \
+    'http://fanyi.youdao.com/openapi.do?keyfrom=youdao111&key=60638690&type=data&doctype=json&version=1.1&q='

@@ -31,5 +31,5 @@ class GlobalExceptionMiddleware(MiddlewareMixin):
                 isinstance(exception, django.core.exceptions.FieldDoesNotExist) or \
                 isinstance(exception, django.core.exceptions.TooManyFieldsSent):
             msg_info.update({'code': 1004})
-        settings.DEVOPS_LOG.exception(msg_info)
+        settings.STUDY_LOG.exception(msg_info)
         return JsonResponse(msg_info)
